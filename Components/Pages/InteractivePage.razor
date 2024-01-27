@@ -1,0 +1,71 @@
+﻿@page "/interactive-page"
+@rendermode InteractiveServer
+
+<PageTitle>Interactive Page in Static App</PageTitle>
+
+<h1>Interactive Page in Static App</h1>
+
+<p>
+    This page (component) is interactive while the whole app is static, including all <strong>layouts</strong>.
+</p>
+<p>
+    The cascading values of <code>TelerikRootComponent</code> inside <code>TelerikLayout.razor</code>
+    are not accessible to any other components.
+    That's why you need tо add аnother <code>TelerikRootComponent</code> here.
+</p>
+<p>
+    This part of the page is not nested in a <code>TelerikRootComponent</code>.
+    The Telerik Blazor components that don't use popups will work here,
+    but this approach is not officially supported or recommended.
+</p>
+
+<TelerikContainer>
+    <div style="margin:2em 0;padding:2em;border:1px solid #999">
+
+        <p>This part of the page is inside a <code>TelerikRootComponent</code> and can contain Telerik Blazor components.</p>
+
+        <p>
+            Notice the usage of a <code>TelerikContainer</code> component.
+            Its main purpose is to reuse a <code>TelerikRootComponent</code> with the same settings.
+            If the <code>TelerikRootComponent</code> doesn't set any parameters,
+            then you don't need a <code>TelerikContainer</code>.
+        </p>
+
+        <TelerikDatePicker @bind-Value="@DatePickerValue"
+                           Width="200px" />
+
+        <TelerikButton OnClick="@( () => WindowVisible = !WindowVisible )">Toggle Window</TelerikButton>
+
+        <TelerikWindow @bind-Visible="@WindowVisible" Width="300px" Height="200px">
+            <WindowTitle>Telerik Window</WindowTitle>
+            <WindowActions>
+                <WindowAction Name="Close" />
+            </WindowActions>
+            <WindowContent>
+                Window Content
+            </WindowContent>
+        </TelerikWindow>
+
+        <p>
+            Only <strong>child components</strong> of <code>TelerikRootComponent</code>
+            have access to the Telerik <code>DialogFactory</code> cascading parameter.
+            If you need to use the factory here, do it through a helper component.
+            <br />
+            <TelerikDialogHelper @ref="@DialogHelperRef" />
+            <TelerikButton OnClick="@OnButtonClick">Show Dialog</TelerikButton>
+        </p>
+    </div>
+</TelerikContainer>
+
+@code {
+    private DateTime DatePickerValue { get; set; } = DateTime.Today;
+
+    private TelerikDialogHelper DialogHelperRef { get; set; } = null!;
+
+    private bool WindowVisible { get; set; }
+
+    private async Task OnButtonClick()
+    {
+        await DialogHelperRef.AlertAsync("Telerik DialogFactory");
+    }
+}
