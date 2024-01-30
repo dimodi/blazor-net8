@@ -1,14 +1,12 @@
 ﻿@page "/"
 
-<PageTitle>Home</PageTitle>
+<PageTitle>Static Page</PageTitle>
 
-<h1>Home</h1>
+<h1>Static Page</h1>
 
-<p>This sample application shows different ways to use Telerik Blazor components in a <strong>.NET 8 Blazor Web App</strong> project template,
-    which has its <em>Interactivity Location</em> set to "<em>Per page / component.</em>"</p>
+<p>
+    This sample application shows different ways to use Telerik Blazor components in a <strong>.NET 8 Blazor Web App</strong> project template,
+    which has <strong>Server</strong> <em>Render mode</em> and <strong>Per page / component</strong> <em>Interactivity location</em>.
+</p>
 
-<h2>Static Page in Static App</h2>
-
-<p>This page is static. Any components, which require interactivity (including Telerik Blazor components)
-    will not respond to user actions and will not refresh their UI.
-    Telerik Blazor components with client-side rendering (Charts, Maps, Gauges) will not render at all.</p>
+<Notes PageInteractivity="static" AppInteractivity="static" />

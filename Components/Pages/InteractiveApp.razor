@@ -1,10 +1,12 @@
-﻿@page "/telerik"
+﻿@page "/interactive-app"
 
-<h1>Interactive App Mode</h1>
+<h1>Interactive App</h1>
 
-<p>This page (component) enables interactivity for the whole app, including all <strong>layouts</strong>.
-    The logic for this is in <code>App.razor</code>. There is no need to add a <code>TelerikRootComponent</code> here,
-    because the cascading values from the one in <code>TelerikLayout.razor</code> are accessible.</p>
+<Notes PageInteractivity="interactive (inherited)" AppInteractivity="interactive">
+    <Explanation>
+        <strong>The logic for changing the app interactivity is in <code>App.razor</code></strong>.
+    </Explanation>
+</Notes>
 
 <TelerikDatePicker @bind-Value="@DatePickerValue"
                    Width="200px" />
@@ -21,7 +23,7 @@
     </WindowContent>
 </TelerikWindow>
 
-<TelerikButton OnClick="@OnButtonClick">Show Dialog</TelerikButton>
+<TelerikButton OnClick="@OnButtonClick">Show Dialog Directly</TelerikButton>
 
 @code {
     private DateTime DatePickerValue { get; set; } = DateTime.Today;
