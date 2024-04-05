@@ -1,0 +1,104 @@
+﻿@page "/"
+
+@using Telerik.DataSource
+@using Telerik.DataSource.Extensions
+
+<PageTitle>Home</PageTitle>
+
+<h1>Hello, world!</h1>
+
+<p>Welcome to your new Telerik Blazor app.</p>
+
+<p><TelerikButton OnClick="@AutoFit">AutoFit All Columns Manually</TelerikButton></p>
+
+<TelerikGrid @ref="@GridRef"
+             OnRead="@OnGridRead"
+             TItem="@Product"
+             Pageable="true"
+             Sortable="true"
+             Resizable="true"
+             FilterMode="GridFilterMode.FilterRow">
+    <GridColumns>
+        <GridColumn Field="@nameof(Product.Name)" Title="Product Name" />
+        <GridColumn Field="@nameof(Product.Price)" />
+        <GridColumn Field="@nameof(Product.ReleaseDate)" Title="Release Date" />
+        <GridColumn Field="@nameof(Product.Active)" />
+    </GridColumns>
+</TelerikGrid>
+
+@code {
+    private TelerikGrid<Product>? GridRef { get; set; }
+
+    private List<Product> GridData { get; set; } = new();
+
+    private bool AutoFitFlag { get; set; }
+
+    private bool FirstGridBindFlag { get; set; } = true;
+
+    private async Task AutoFit()
+    {
+        if (GridRef != null)
+        {
+            await GridRef.AutoFitAllColumnsAsync();
+        }
+    }
+
+    private async Task OnGridRead(GridReadEventArgs args)
+    {
+        await Task.Delay(100); // simulate async operation
+        DataSourceResult result = GridData.ToDataSourceResult(args.Request);
+
+        args.Data = result.Data;
+        args.Total = result.Total;
+        args.AggregateResults = result.AggregateResults;
+
+        if (FirstGridBindFlag && result.Total > 0)
+        {
+            // it is also possible to auto fit Grid columns on every rebind
+            FirstGridBindFlag = false;
+            AutoFitFlag = true;
+        }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (AutoFitFlag)
+        {
+            AutoFitFlag = false;
+            await Task.Delay(1);
+            if (GridRef != null)
+            {
+                await GridRef.AutoFitAllColumnsAsync();
+            }
+        }
+
+        await base.OnAfterRenderAsync(firstRender);
+    }
+
+    protected override void OnInitialized()
+    {
+        GridData = new List<Product>();
+        var rnd = new Random();
+
+        for (int i = 1; i <= 70; i++)
+        {
+            GridData.Add(new Product()
+            {
+                Id = i,
+                Name = "Product " + i.ToString(),
+                Price = (decimal)rnd.Next(1, 100),
+                ReleaseDate = DateTime.Now.AddDays(-rnd.Next(60, 1000)),
+                Active = i % 3 == 0
+            });
+        }
+    }
+
+    public class Product
+    {
+        public int Id { get; set; }
+        public string Name { get; set; } = string.Empty;
+        public decimal Price { get; set; }
+        public DateTime ReleaseDate { get; set; }
+        public bool Active { get; set; }
+    }
+}
